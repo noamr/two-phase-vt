@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Two-Phase View Transitions Demo (Preview Mechanism)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="initial-content">
+      <h1>Two-Phase View Transitions (Preview)</h1>
+      <p>This demo uses the <b>Navigation Preview</b> mechanism:</p>
+      <ol>
+        <li>
+          The old page shows a "preview" (skeleton) instantly on link click.
+        </li>
+        <li>
+          The browser then transitions from the skeleton on the old page to the
+          real content on the new page.
+        </li>
+      </ol>
+      <p>
+        <a href="content.html" id="nav-link"
+          >Click here to start the navigation</a
+        >
+      </p>
+      <p>
+        <input type="checkbox" id="delay" />
+        <label for="delay">Delay navigation</label>
+      </p>
+    </div>
+
+    <!-- The Skeleton element that will be shown during 'preview' -->
+    <div id="main-content" class="skeleton-box"></div>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js").then((registration) => {
+          console.log("Service Worker registered");
+        });
+      }
+
+      document.getElementById("delay").addEventListener("change", (e) => {
+        document.getElementById("nav-link").href =
+          "content.html" + (e.target.checked ? "?delay=2000" : "");
+      });
+    </script>
+  </body>
+</html>
