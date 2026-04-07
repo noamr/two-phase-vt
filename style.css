@@ -3,11 +3,9 @@
     types: enter-new;
   }
 
-  @navigation (at: url-pattern("/")) {
-    @view-transition {
-      navigation: preview;
-      types: exit-old;
-    }
+  @view-transition {
+    navigation: preview;
+    types: exit-old;
   }
 
   #main-content {
