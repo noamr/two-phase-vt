@@ -32,18 +32,5 @@
 
     <!-- The Skeleton element that will be shown during 'preview' -->
     <div id="main-content" class="skeleton-box"></div>
-
-    <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("sw.js").then((registration) => {
-          console.log("Service Worker registered");
-        });
-      }
-
-      document.getElementById("delay").addEventListener("change", (e) => {
-        document.getElementById("nav-link").href =
-          "content.html" + (e.target.checked ? "?delay=2000" : "");
-      });
-    </script>
   </body>
 </html>

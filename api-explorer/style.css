@@ -72,12 +72,35 @@ html.mode-3:active-view-transition-type(enter-new) #hero-img-detail {
   view-transition-name: hero;
 }
 
-/* Custom elaborate blur animation for Mode 3 Phase 2 (Fake Image -> Real Hero) */
-html.mode-3:active-view-transition-type(enter-new)::view-transition-old(hero) {
+/* 
+   Mode 4: Hero morphs in both phases
+   Phase 1 (exit-old): Hero image morphs to skeleton hero.
+   Phase 2 (enter-new): Skeleton hero morphs into real hero image.
+*/
+html.mode-4:not(.preview-active):active-view-transition-type(exit-old) #hero-img {
+  view-transition-name: hero;
+}
+
+html.mode-4.preview-active:active-view-transition-type(exit-old) #sk-hero-img {
+  view-transition-name: hero;
+}
+
+html.mode-4.preview-active:active-view-transition-type(enter-new) #sk-hero-img {
+  view-transition-name: hero;
+}
+
+html.mode-4:active-view-transition-type(enter-new) #hero-img-detail {
+  view-transition-name: hero;
+}
+
+/* Custom elaborate blur animation for Phase 2 (Fake Image -> Real Hero) */
+html.mode-3:active-view-transition-type(enter-new)::view-transition-old(hero),
+html.mode-4:active-view-transition-type(enter-new)::view-transition-old(hero) {
   animation: blur-out-hero 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
-html.mode-3:active-view-transition-type(enter-new)::view-transition-new(hero) {
+html.mode-3:active-view-transition-type(enter-new)::view-transition-new(hero),
+html.mode-4:active-view-transition-type(enter-new)::view-transition-new(hero) {
   animation: blur-in-hero 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
