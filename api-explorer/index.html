@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Two-Phase View Transitions Demo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="mode-1">
+    <div class="workspace">
+      <!-- Left Panel -->
+      <div class="control-panel">
+        <div class="panel-card header-card">
+          <h2>Two-Phase View Transitions</h2>
+          <p class="tagline">Declarative Navigation Preview Demo</p>
+        </div>
+
+        <div class="panel-card settings-card">
+          <h3>Select Demo Mode</h3>
+          
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="demo-mode" value="mode-1" checked>
+              <span>1. Whole page transitions</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="demo-mode" value="mode-2">
+              <span>2. Hero -> Preview, then Preview -> Real Content</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="demo-mode" value="mode-3">
+              <span>3. Whole Page -> Preview, then Preview Hero -> Real Hero</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="panel-card api-card">
+          <h3>Proposed API Syntax</h3>
+          <div class="setting-item" style="margin-bottom: 1rem;">
+            <select id="api-select" style="width: 100%; padding: 0.5rem; border-radius: 6px; background: rgba(0,0,0,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.2); font-size: 0.9rem;">
+              <option value="1">1. Preview is a route</option>
+              <option value="2">2. Preview is a query</option>
+              <option value="3">3. Preview is a phase</option>
+              <option value="4">4. Preview is a phase, before/after types</option>
+              <option value="5">5. Preview is a view-transition type</option>
+              <option value="6">6. Preview is a relation</option>
+            </select>
+          </div>
+          <pre style="background: rgba(0,0,0,0.4); padding: 1rem; border-radius: 8px; overflow-x: auto; max-height: 350px; overflow-y: auto;"><code id="api-code" style="font-family: monospace; font-size: 0.75rem; color: #9cdcfe; line-height: 1.4; display: inline-block; min-width: 100%;"></code></pre>
+        </div>
+      </div>
+
+      <!-- Right Panel: Phone -->
+      <div class="device-container">
+        <div class="device-phone">
+          <div class="phone-speaker"></div>
+          <div class="phone-screen">
+            
+            <div class="app-header">
+              <h1>News App</h1>
+            </div>
+
+            <!-- Page Content (Hidden in preview) -->
+            <div id="page-content">
+              <div class="article-card dummy-card">
+                <div class="article-info">
+                  <h2>The Future of Web Dev</h2>
+                  <p>Discover the latest trends in frontend development.</p>
+                </div>
+              </div>
+
+              <div class="article-card dummy-card">
+                <div class="article-info">
+                  <h2>Mastering CSS Grid</h2>
+                  <p>Learn how to build complex layouts with ease.</p>
+                </div>
+              </div>
+
+              <a href="content.html?mode=mode-1" id="nav-link" class="article-card">
+                <img id="hero-img" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop" alt="Hero" />
+                <div class="article-info">
+                  <h2>Exploring View Transitions</h2>
+                  <p>Click to read the full article and see the transition in action.</p>
+                </div>
+              </a>
+
+              <div class="article-card dummy-card">
+                <div class="article-info">
+                  <h2>JavaScript Performance</h2>
+                  <p>Optimize your web apps for speed and efficiency.</p>
+                </div>
+              </div>
+              
+              <div class="article-card dummy-card">
+                <div class="article-info">
+                  <h2>Debugging Like a Pro</h2>
+                  <p>Find and fix errors faster with these tips.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Skeleton Content (Shown in preview) -->
+            <div id="skeleton-content">
+              <div id="sk-hero-img"></div>
+              <div class="sk-body">
+                <div class="sk-line sk-title"></div>
+                <div class="sk-line sk-text"></div>
+                <div class="sk-line sk-text"></div>
+                <div class="sk-line sk-text short"></div>
+              </div>
+            </div>
+
+          </div>
+          <div class="phone-home-button"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const apiSnippets = {
+        'mode-1': {
+          '1': '/* No preview specific API needed for full page transitions */',
+          '2': '/* No preview specific API needed for full page transitions */',
+          '3': '/* No preview specific API needed for full page transitions */',
+          '4': '/* No preview specific API needed for full page transitions */',
+          '5': '/* No preview specific API needed for full page transitions */',
+          '6': '/* No preview specific API needed for full page transitions */'
+        },
+        'mode-2': {
+          '1': `
+@navigation (to: preview) {
+  #hero-img { view-transition-name: hero; }
+}
+
+@navigation (at: preview) {
+  #sk-hero-img { view-transition-name: hero; }
+}`,
+          '2': `
+@navigation (preview: entering) {
+  #hero-img { view-transition-name: hero; }
+}
+
+@navigation (preview: active) {
+  #sk-hero-img { view-transition-name: hero; }
+}`,
+          '3': `
+@navigation (phase: before-preview) {
+  #hero-img { view-transition-name: hero; }
+}
+
+@navigation (phase: preview) {
+  #sk-hero-img { view-transition-name: hero; }
+}`,
+          '4': `
+::active-view-transition-types(-ua-to-preview) {
+  #hero-img { view-transition-name: hero; }
+}
+
+@navigation (phase: preview) {
+  #sk-hero-img { view-transition-name: hero; }
+}`,
+          '5': `
+::active-view-transition-types(-ua-to-preview) {
+  #hero-img { view-transition-name: hero; }
+}
+
+::active-view-transition-types(-ua-preview) {
+  #sk-hero-img { view-transition-name: hero; }
+}`,
+          '6': `
+@navigation ((to: --details) and (preview: none)) {
+  #hero-img { view-transition-name: hero; }
+}
+
+@navigation (preview: --details) {
+  #sk-hero-img { view-transition-name: hero; }
+}`
+        },
+        'mode-3': {
+          '1': `
+@navigation (from: preview) {
+  #sk-hero-img { view-transition-name: hero; }
+}`,
+          '2': `
+@navigation (preview: leaving) {
+  #sk-hero-img { view-transition-name: hero; }
+}`,
+          '3': `
+@navigation (phase: after-preview) {
+  #sk-hero-img { view-transition-name: hero; }
+}`,
+          '4': `
+::active-view-transition-types(-ua-from-preview) {
+  #sk-hero-img { view-transition-name: hero; }
+}`,
+          '5': `
+::active-view-transition-types(-ua-from-preview) {
+  #sk-hero-img { view-transition-name: hero; }
+}`,
+          '6': `
+@navigation (swap-to: --details) {
+  #sk-hero-img { view-transition-name: hero; }
+}`
+        }
+      };
+
+      const updateApiCode = () => {
+        const mode = document.querySelector('input[name="demo-mode"]:checked').value;
+        const apiOpt = document.getElementById('api-select').value;
+        document.getElementById('api-code').textContent = apiSnippets[mode][apiOpt];
+      };
+
+      document.getElementById('api-select').addEventListener('change', updateApiCode);
+
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('mode')) {
+        const r = document.querySelector(`input[name="demo-mode"][value="${urlParams.get('mode')}"]`);
+        if (r) { r.checked = true; }
+      }
+      if (urlParams.get('api')) {
+        document.getElementById('api-select').value = urlParams.get('api');
+        updateApiCode();
+      }
+
+      const updateMode = () => {
+        const mode = document.querySelector('input[name="demo-mode"]:checked').value;
+        document.documentElement.className = mode;
+        updateApiCode();
+      };
+
+      document.querySelectorAll('input[name="demo-mode"]').forEach(el => {
+        el.addEventListener('change', updateMode);
+      });
+      updateMode();
+
+      document.getElementById('nav-link').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const mode = document.querySelector('input[name="demo-mode"]:checked').value;
+        const apiOpt = document.getElementById('api-select').value;
+        const targetUrl = `content.html?mode=${mode}&api=${apiOpt}`;
+
+        if (!document.startViewTransition) {
+          document.documentElement.classList.add('preview-active');
+          window.location.href = targetUrl;
+          return;
+        }
+
+        // Phase 1: Same-document VT to skeleton
+        const transition = document.startViewTransition({
+          update: () => {
+            document.documentElement.classList.add('preview-active');
+          },
+          types: ['exit-old']
+        });
+
+        await transition.finished;
+
+        window.location.href = targetUrl;
+      });
+    </script>
+  </body>
+</html>

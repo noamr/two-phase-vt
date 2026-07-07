@@ -1,0 +1,104 @@
+@import "theme.css";
+
+/* ==========================================================================
+   SECTION 1: VIEW TRANSITIONS BASE
+   ========================================================================== */
+@view-transition {
+  navigation: auto;
+  types: enter-new;
+}
+
+/* Ensure background doesn't flash white */
+html,
+:root,
+body {
+  background-color: #0f172a;
+}
+
+::view-transition {
+  background-color: #0f172a;
+}
+
+/* Make same-document VT slightly faster than cross-doc, or keep them consistent */
+::view-transition-group(*) {
+  animation-duration: 0.8s;
+}
+
+/* Base states */
+#skeleton-content {
+  display: none;
+}
+
+/* Navigation preview state toggles visibility via class */
+html.preview-active #page-content {
+  display: none;
+}
+
+html.preview-active #skeleton-content {
+  display: block;
+}
+
+/* ==========================================================================
+   SECTION 2: DEMO MODES LOGIC
+   ========================================================================== */
+/* 
+   Mode 1: Whole page transitions 
+   (No specific VT names needed, root transitions to root in both phases)
+*/
+
+/* 
+   Mode 2: Hero -> Preview (Phase 1), Whole Preview -> Content (Phase 2)
+   First transition (exit-old): The hero image morphs to the preview skeleton.
+   Second transition (enter-new): The whole preview morphs to the real content.
+*/
+html.mode-2:not(.preview-active):active-view-transition-type(exit-old) #hero-img {
+  view-transition-name: hero;
+}
+
+html.mode-2.preview-active:active-view-transition-type(exit-old) #sk-hero-img {
+  view-transition-name: hero;
+}
+
+/* 
+   Mode 3: Whole Page -> Preview (Phase 1), Preview Hero -> Real Hero (Phase 2) 
+   First transition (exit-old): The whole page morphs to the preview (no specific VT names). 
+   Second transition (enter-new): The preview hero morphs into the real hero image.
+*/
+html.mode-3.preview-active:active-view-transition-type(enter-new) #sk-hero-img {
+  view-transition-name: hero;
+}
+
+html.mode-3:active-view-transition-type(enter-new) #hero-img-detail {
+  view-transition-name: hero;
+}
+
+/* Custom elaborate blur animation for Mode 3 Phase 2 (Fake Image -> Real Hero) */
+html.mode-3:active-view-transition-type(enter-new)::view-transition-old(hero) {
+  animation: blur-out-hero 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+html.mode-3:active-view-transition-type(enter-new)::view-transition-new(hero) {
+  animation: blur-in-hero 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes blur-out-hero {
+  0% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(20px);
+  }
+}
+
+@keyframes blur-in-hero {
+  0% {
+    opacity: 0;
+    filter: blur(20px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
