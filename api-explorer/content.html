@@ -260,6 +260,14 @@
       document.getElementById('api-select').addEventListener('change', updateApiCode);
       updateApiCode();
 
+      const img = document.getElementById('hero-img-detail');
+      if (img && !img.complete) {
+        document.documentElement.classList.add('hero-loading');
+        const removeLoading = () => document.documentElement.classList.remove('hero-loading');
+        img.addEventListener('load', removeLoading);
+        img.addEventListener('error', removeLoading);
+      }
+
       const goBack = (e) => {
         e.preventDefault();
         const currentApi = document.getElementById('api-select').value;

@@ -105,9 +105,9 @@
 
             <!-- Skeleton Content (Shown in preview) -->
             <div id="skeleton-content">
-              <div id="sk-hero-img"></div>
+              <img id="sk-hero-img" alt="Hero" />
               <div class="sk-body">
-                <div class="sk-line sk-title"></div>
+                <h2 id="sk-title"></h2>
                 <div class="sk-line sk-text"></div>
                 <div class="sk-line sk-text"></div>
                 <div class="sk-line sk-text short"></div>
@@ -316,6 +316,18 @@
         const mode = document.querySelector('input[name="demo-mode"]:checked').value;
         const apiOpt = document.getElementById('api-select').value;
         const targetUrl = `content.html?mode=${mode}&api=${apiOpt}`;
+
+        const heroImg = document.getElementById('hero-img');
+        const skHeroImg = document.getElementById('sk-hero-img');
+        if (heroImg && skHeroImg) {
+          skHeroImg.src = heroImg.src;
+        }
+
+        const titleEl = document.querySelector('#nav-link h2');
+        const skTitleEl = document.getElementById('sk-title');
+        if (titleEl && skTitleEl) {
+          skTitleEl.textContent = titleEl.textContent;
+        }
 
         if (!document.startViewTransition) {
           document.documentElement.classList.add('preview-active');

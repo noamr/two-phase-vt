@@ -93,7 +93,7 @@ html.mode-4:active-view-transition-type(enter-new) #hero-img-detail {
   view-transition-name: hero;
 }
 
-/* Custom elaborate blur animation for Phase 2 (Fake Image -> Real Hero) */
+/* Custom elaborate blur animation for Phase 2 (Fake Image -> Real Hero)
 html.mode-3:active-view-transition-type(enter-new)::view-transition-old(hero),
 html.mode-4:active-view-transition-type(enter-new)::view-transition-old(hero) {
   animation: blur-out-hero 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
@@ -124,4 +124,32 @@ html.mode-4:active-view-transition-type(enter-new)::view-transition-new(hero) {
     opacity: 1;
     filter: blur(0px);
   }
+}
+*/
+
+/* Show only the old hero pseudo element if the image is still loading */
+html.hero-loading::view-transition-old(hero) {
+  animation-play-state: paused;
+  opacity: 1;
+}
+html.hero-loading::view-transition-new(hero) {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+/* Title view transition names for scenarios 2-4 */
+html:is(.mode-2, .mode-3, .mode-4):not(.preview-active):active-view-transition-type(exit-old) #nav-link h2 {
+  view-transition-name: title;
+}
+
+html:is(.mode-2, .mode-3, .mode-4).preview-active:active-view-transition-type(exit-old) #sk-title {
+  view-transition-name: title;
+}
+
+html:is(.mode-2, .mode-3, .mode-4).preview-active:active-view-transition-type(enter-new) #sk-title {
+  view-transition-name: title;
+}
+
+html:is(.mode-2, .mode-3, .mode-4):active-view-transition-type(enter-new) .detail-body h2 {
+  view-transition-name: title;
 }
